@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="original.png" alt="SOCIAL Logo" width="200"/>
+  <img src="SOCIAL.png" alt="SOCIAL Logo" width="200"/>
 </p>
 
 # 🤝 SOCIAL: Social-Inspired Collective Adaptive Intelligence Learning
