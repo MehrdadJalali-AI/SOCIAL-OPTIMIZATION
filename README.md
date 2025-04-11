@@ -1,40 +1,38 @@
-# 🤝 SOCAIL: Social-Inspired Collective Adaptive Intelligence Learning
+# 🤝 SOCIAL: Social-Inspired Collective Adaptive Intelligence Learning
 
-**SOCAIL** is a novel population-based optimization algorithm inspired by human social behaviors, adaptive learning, and collective intelligence. It integrates elite memory, dynamic mutation, and diffusion-based learning to efficiently solve complex, multimodal optimization problems.
+**SOCIAL** is a novel population-based optimization algorithm inspired by human social behaviors, adaptive learning, and collective intelligence. It combines elite memory, dynamic mutation, and diffusion-based learning to solve complex, multimodal optimization problems with efficiency and stability.
 
 ---
 
 ## 🚀 Key Features
 
-- **Elite Memory**: Guides population using top-performing individuals.
-- **Dynamic Mutation**: Adapts mutation rate over time for better convergence.
-- **Social Diffusion**: Individuals learn from others based on social centrality and fitness.
-- **Multi-Phase Strategy**: Transition from exploration to exploitation phases.
-- **Scalable**: Effective for high-dimensional and real-world problems.
+- **Elite Memory**: Maintains top individuals to guide the search.
+- **Dynamic Mutation**: Adjusts mutation intensity across iterations.
+- **Social Diffusion**: Knowledge sharing influenced by fitness and centrality.
+- **Multi-Phase Strategy**: Shifts from exploration to exploitation.
+- **Scalable & Versatile**: Effective for both benchmark and real-world problems.
 
 ---
 
 ## 📈 Applications
 
-- Black-box function optimization
-- Hyperparameter tuning in ML
+- Global optimization problems
+- Hyperparameter tuning in machine learning
 - Feature selection
-- Engineering design optimization
-- Materials informatics and cheminformatics
+- Engineering design
+- Materials science and cheminformatics
 
 ---
 
-## 📊 Benchmark Evaluation
+## 📊 Benchmark Performance
 
-SOCAIL is evaluated on 23 standard benchmark functions using metrics like:
+SOCIAL has been tested on 23 standard benchmark functions and compared with state-of-the-art optimizers using:
 
 - Best and average fitness
 - Success rate
-- Robustness score
+- Robustness
 - Convergence speed
 - Population diversity
-
-Results show strong performance compared to state-of-the-art algorithms.
 
 ---
 
@@ -43,6 +41,5 @@ Results show strong performance compared to state-of-the-art algorithms.
 Clone the repository:
 
 ```bash
-git clone https://github.com/YourUsername/SOCAIL.git
-cd SOCAIL
-
+git clone https://github.com/YourUsername/SOCIAL.git
+cd SOCIAL
