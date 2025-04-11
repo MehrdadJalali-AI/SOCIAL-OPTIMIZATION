@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="original.png" alt="SOCIAL Logo" width="200"/>
+</p>
+
 # 🤝 SOCIAL: Social-Inspired Collective Adaptive Intelligence Learning
 
 **SOCIAL** is a novel population-based optimization algorithm inspired by human social behaviors, adaptive learning, and collective intelligence. It combines elite memory, dynamic mutation, and diffusion-based learning to solve complex, multimodal optimization problems with efficiency and stability.
@@ -16,10 +20,10 @@
 
 ## 📈 Applications
 
-- Global optimization problems
-- Hyperparameter tuning in machine learning
-- Feature selection
-- Engineering design
+- Global optimization problems  
+- Hyperparameter tuning in machine learning  
+- Feature selection  
+- Engineering design  
 - Materials science and cheminformatics
 
 ---
@@ -28,10 +32,10 @@
 
 SOCIAL has been tested on 23 standard benchmark functions and compared with state-of-the-art optimizers using:
 
-- Best and average fitness
-- Success rate
-- Robustness
-- Convergence speed
+- Best and average fitness  
+- Success rate  
+- Robustness  
+- Convergence speed  
 - Population diversity
 
 ---
