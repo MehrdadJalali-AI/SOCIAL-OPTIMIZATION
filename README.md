@@ -3,7 +3,7 @@
 </p>
 
 
-#  SOCIAL: Social Network Optimization via Centrality and Influence-based Learning
+#  SOCIAL: Social Network Optimization Algorithm via Centrality and Influence-based Learning
 **SOCIAL** is a novel population-based optimization algorithm inspired by human social behaviors, adaptive learning, and collective intelligence. It combines elite memory, dynamic mutation, and diffusion-based learning to solve complex, multimodal optimization problems with efficiency and stability.
 
 ---
