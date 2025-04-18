@@ -7,6 +7,9 @@
 **SOCIAL** is a novel population-based optimization algorithm inspired by human social behaviors, adaptive learning, and collective intelligence. It combines elite memory, dynamic mutation, and diffusion-based learning to solve complex, multimodal optimization problems with efficiency and stability.
 
 ---
+<p align="center">
+  <img src="SOCIAL2.png" alt="SOCIAL Logo" width="600"/>
+</p>
 
 ## Key Features
 
