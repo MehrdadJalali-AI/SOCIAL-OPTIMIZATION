@@ -11,42 +11,69 @@
   <img src="SOCIAL2.png" alt="SOCIAL Logo" width="600"/>
 </p>
 
-## Key Features
+## 🌐 SOCIAL: Social Network Optimization Algorithm via Centrality and Influence-based Learning
 
-- **Elite Memory**: Maintains top individuals to guide the search.
-- **Dynamic Mutation**: Adjusts mutation intensity across iterations.
-- **Social Diffusion**: Knowledge sharing influenced by fitness and centrality.
-- **Multi-Phase Strategy**: Shifts from exploration to exploitation.
-- **Scalable & Versatile**: Effective for both benchmark and real-world problems.
+**SOCIAL** is a network-driven optimization algorithm that models agent behavior as information-sharing over an adaptive graph. Designed for complex, multimodal, and high-dimensional optimization tasks, it leverages centrality, influence, and dynamic mutation to explore and exploit the solution space.
 
 ---
 
-## Applications
+### 🔁 Algorithm Workflow
 
-- Global optimization problems  
-- Hyperparameter tuning in machine learning  
-- Feature selection  
-- Engineering design  
-- Materials science and cheminformatics
+1. **Initialize the Agent Network**
+   - Generate a graph (e.g., Watts-Strogatz, Barabási–Albert) with `NUM_NODES` agents.
+   - Each node is assigned a random position in the solution space.
+
+2. **Evaluate Fitness**
+   - Compute the fitness of all agents using a selected benchmark or objective function.
+   - Identify the current best solution (global best and elite).
+
+3. **Main Optimization Loop**
+   Repeats for `ITERATIONS`:
+
+   - **Social Diffusion Update**
+     - Each agent updates its position using:
+       - Weighted influence from neighbors (based on centrality & performance)
+       - Global best and elite solutions
+       - Synchronization with population mean
+     - Adaptive mutation is applied based on entropy and fitness diversity.
+
+   - **Elite Pulling (Formerly "Lotus Shrink")**
+     - Top agents are gradually pulled toward the elite solution with decaying influence.
+
+   - **Community-Guided Local Search (CGLS, formerly "Lotus Reinforcement")**
+     - Underperforming agents adjust their positions based on local community leaders and direction vectors.
+     - Helps refine solutions in a decentralized, structure-aware way.
+
+   - **Graph Adaptation**
+     - Periodically:
+       - Remove low-fitness agents and replace them with new ones.
+       - Rewire edges to strengthen good neighborhoods and ensure diversity.
+       - Add random links to preserve exploration.
+
+4. **Run Statistics & Evaluation**
+   - Save convergence history, fitness curves, and final populations.
+   - Repeat for `NUM_RUNS` to collect robustness and diversity metrics.
 
 ---
 
-## Benchmark Performance
+### 🧪 Highlights
 
-SOCIAL has been tested on 23 standard benchmark functions and compared with state-of-the-art optimizers using:
-
-- Best and average fitness  
-- Success rate  
-- Robustness  
-- Convergence speed  
-- Population diversity
+- Graph-native agent modeling
+- Centrality- and influence-weighted interactions
+- Adaptive mutation using population entropy
+- Community-based local exploitation
+- Elite tracking and guided attraction
+- Compatible with continuous, discrete, and mixed-type problems
 
 ---
 
-## 📦 Installation
+### 📊 Benchmark Support
 
-Clone the repository:
+Functions included:
+- Unimodal: Sphere, Rosenbrock, Step, etc.
+- Multimodal: Rastrigin, Ackley, Griewank, Schwefel variants
+- Deceptive: Shekel, Hartman, Branin, etc.
 
-```bash
-git clone https://github.com/YourUsername/SOCIAL.git
-cd SOCIAL
+---
+
+
