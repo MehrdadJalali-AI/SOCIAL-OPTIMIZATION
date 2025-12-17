@@ -1,7 +1,4 @@
 
-# SOCIAL Optimizer
-
-SOCIAL (Social Optimization with Centrality and Influence Adaptive Learning) is a graph-based population optimization algorithm.
 
 
 <p align="center">
