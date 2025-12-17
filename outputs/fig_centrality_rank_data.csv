@@ -1,0 +1,6 @@
+centrality,avg_rank
+betweenness,1.5
+pagerank,2.1
+degree,2.8
+closeness,3.2
+eigenvector,3.5

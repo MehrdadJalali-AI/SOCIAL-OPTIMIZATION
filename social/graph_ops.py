@@ -68,34 +68,60 @@ def compute_centrality(G: nx.Graph, mode: str = "betweenness",
     return cent
 
 
-def compute_fitness_influence(fitness_values: np.ndarray) -> np.ndarray:
+def compute_fitness_influence(fitness_values: np.ndarray, mode: str = "rank") -> np.ndarray:
     """
-    Compute relative fitness influence (SOCIAL paper Eq. 12).
-    
-    I_j^t = 1 - log(1 + |f_j|) / log(1 + max(|f|))
+    Compute relative fitness influence for minimization problems.
     
     Args:
-        fitness_values: Array of fitness values
+        fitness_values: Array of fitness values (lower is better for minimization)
+        mode: Influence computation mode ("rank" or "minmax")
         
     Returns:
-        Array of influence values
+        Array of influence values in [0, 1] where higher influence = better fitness
+        
+    Note:
+        Monotonicity guarantee: if f_i < f_j (better), then influence_i >= influence_j
     """
-    abs_fitness = np.abs(fitness_values)
-    max_abs = np.max(abs_fitness)
-    if max_abs == 0:
-        return np.ones_like(fitness_values)
+    n = len(fitness_values)
+    if n == 0:
+        return np.array([])
     
-    log_influence = np.log1p(abs_fitness)
-    log_max = np.log1p(max_abs)
+    if n == 1:
+        return np.array([1.0])
     
-    influence = 1.0 - (log_influence / (log_max + 1e-10))
-    return np.clip(influence, 0.0, 1.0)
+    if mode == "rank":
+        # Rank-based influence: best fitness gets rank 0, worst gets rank N-1
+        # influence = 1 - rank/(N-1)
+        sorted_indices = np.argsort(fitness_values)  # Ascending order (best first)
+        ranks = np.zeros(n, dtype=float)
+        for rank, idx in enumerate(sorted_indices):
+            ranks[idx] = rank
+        
+        influence = 1.0 - ranks / (n - 1)
+        return np.clip(influence, 0.0, 1.0)
+    
+    elif mode == "minmax":
+        # Min-max normalization: influence = (f_max - f) / (f_max - f_min + eps)
+        f_min = np.min(fitness_values)
+        f_max = np.max(fitness_values)
+        eps = 1e-10
+        
+        if f_max - f_min < eps:
+            # All fitnesses are equal
+            return np.ones_like(fitness_values)
+        
+        influence = (f_max - fitness_values) / (f_max - f_min + eps)
+        return np.clip(influence, 0.0, 1.0)
+    
+    else:
+        raise ValueError(f"Unknown influence mode: {mode}. Must be 'rank' or 'minmax'")
 
 
 def rewire_graph(G: nx.Graph, mode: str = "periodic", 
                  iteration: int = 0, rewire_interval: int = 75,
                  stagnation_count: int = 0, stagnation_threshold: int = 50,
-                 diversity_threshold: float = 0.3, rng: Optional[np.random.Generator] = None) -> nx.Graph:
+                 diversity_threshold: float = 0.3, rng: Optional[np.random.Generator] = None,
+                 rewire_prob: float = 0.05) -> nx.Graph:
     """
     Rewire graph edges based on strategy.
     
@@ -120,8 +146,8 @@ def rewire_graph(G: nx.Graph, mode: str = "periodic",
     
     elif mode == "periodic":
         if iteration > 0 and iteration % rewire_interval == 0:
-            # Rewire 10% of edges
-            nswap = max(1, int(0.1 * G.number_of_edges()))
+            # Rewire with configurable probability (default 5% of edges)
+            nswap = max(1, int(rewire_prob * G.number_of_edges()))
             try:
                 nx.double_edge_swap(G, nswap=nswap, max_tries=1000, seed=rng)
             except nx.NetworkXError:

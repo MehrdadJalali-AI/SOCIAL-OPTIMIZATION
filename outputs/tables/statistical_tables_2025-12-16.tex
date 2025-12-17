@@ -1,0 +1,30 @@
+\begin{table}[h]
+\centering
+\caption{Friedman Test Results}
+\begin{tabular}{lcc}
+\hline
+Algorithm & Average Rank & p-value \\
+\hline
+SOCIAL & 3.093 & 0.0000 \\
+DE & 1.864 & 0.0000 \\
+PSO & 2.526 & 0.0000 \\
+GWO & 2.517 & 0.0000 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[h]
+\centering
+\caption{Pairwise Wilcoxon Signed-Rank Tests}
+\begin{tabular}{lccccc}
+\hline
+Algorithm 1 & Algorithm 2 & Statistic & p-value & Corrected p-value & Significant \\
+\hline
+SOCIAL & DE & 43357.000 & 0.0000 & 0.0000 & Yes \\
+SOCIAL & PSO & 87061.000 & 0.0000 & 0.0000 & Yes \\
+SOCIAL & GWO & 53609.000 & 0.0000 & 0.0000 & Yes \\
+\hline
+\end{tabular}
+\end{table}

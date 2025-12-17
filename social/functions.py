@@ -67,7 +67,8 @@ class BenchmarkFunctions:
     
     @staticmethod
     def schwefel_2_26(x):
-        return 418.9829*len(x) - np.sum(x * np.sin(np.sqrt(np.abs(x))))
+        # Corrected: global optimum is NEGATIVE (≈ -418.9829 * D)
+        return np.sum(x * np.sin(np.sqrt(np.abs(x)))) - 418.9829*len(x)
     
     @staticmethod
     def rastrigin(x):
@@ -141,8 +142,9 @@ class BenchmarkFunctions:
     @staticmethod
     def goldstein_price(x):
         x = x[:2]
-        term1 = 1 + (x[0] + x[1] + 1)**2 * (19 - 14*x[0] + 3*x[1] - 14*x[1] + 6*x[0]*x[1] + 3*x[1]**2)
-        term2 = 30 + (2*x[0] - 3*x[1])**2 * (18 - 32*x[0] + 12*x[1] + 48*x[0] - 36*x[0]*x[1] + 27*x[1]**2)
+        # Corrected formula: Goldstein-Price is strictly positive, optimum ≈ 3.0 at (0, -1)
+        term1 = 1 + (x[0] + x[1] + 1)**2 * (19 - 14*x[0] + 3*x[0]**2 - 14*x[1] + 6*x[0]*x[1] + 3*x[1]**2)
+        term2 = 30 + (2*x[0] - 3*x[1])**2 * (18 - 32*x[0] + 12*x[0]**2 + 48*x[1] - 36*x[0]*x[1] + 27*x[1]**2)
         return term1 * term2
     
     @staticmethod

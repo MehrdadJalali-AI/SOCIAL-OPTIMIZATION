@@ -88,12 +88,23 @@ Examples:
                        help="Specific functions to test (default: all or subset)")
     parser.add_argument("--outdir", type=str, default="outputs",
                        help="Output directory")
+    parser.add_argument("--num_nodes", type=int, default=None,
+                       help="Number of nodes (overrides config default)")
+    parser.add_argument("--sweep_nodes", action="store_true",
+                       help="Sweep NUM_NODES ∈ {60, 100, 150, 300}")
+    parser.add_argument("--preset", type=str, default=None,
+                       choices=["SOCIAL_balanced", "SOCIAL_fast"],
+                       help="Configuration preset (default: SOCIAL_balanced)")
+    parser.add_argument("--mode", type=str, default="social",
+                       choices=["social", "all"],
+                       help="Execution mode: 'social' for SOCIAL only, 'all' for all algorithms")
     
     args = parser.parse_args()
     
     # Determine parameters
     if args.quick:
-        num_runs = args.num_runs or 10
+        num_runs = args.num_runs or 5
+        max_evals = args.max_evals if args.max_evals != 105000 else 5000
         if args.functions is None:
             test_functions = ["Sphere", "Rastrigin", "Ackley"]
         else:
@@ -103,6 +114,7 @@ Examples:
         print("="*70)
     else:
         num_runs = args.num_runs or 30
+        max_evals = args.max_evals
         test_functions = args.functions
     
     # Create output directories
@@ -117,7 +129,7 @@ Examples:
     print(f"Start time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Output directory: {args.outdir}")
     print(f"Number of runs: {num_runs}")
-    print(f"Max evaluations: {args.max_evals}")
+    print(f"Max evaluations: {max_evals}")
     if test_functions:
         print(f"Functions: {', '.join(test_functions)}")
     print("="*70)
@@ -125,27 +137,66 @@ Examples:
     success_count = 0
     total_steps = 0
     
-    # Step 1: Run benchmark experiments (SOCIAL + baselines)
-    print("\n" + "="*70)
-    print("STEP 1: Benchmark Experiments (SOCIAL vs Baselines)")
-    print("="*70)
-    
-    if test_functions:
-        func_args = ["--functions"] + test_functions
-    else:
-        func_args = []
-    
-    if run_python_script(
-        "experiments/run_benchmarks.py",
-        [
-            "--max_evals", str(args.max_evals),
+    # Step 1: Run experiments (SOCIAL-only or ALL algorithms)
+    if args.mode == "social":
+        print("\n" + "="*70)
+        print("STEP 1: SOCIAL-Only Benchmark Experiments")
+        print("="*70)
+        
+        if test_functions:
+            func_args = ["--functions"] + test_functions
+        else:
+            func_args = []
+        
+        script_args = [
+            "--max_evals", str(max_evals),
             "--num_runs", str(num_runs),
             "--outdir", args.outdir
-        ] + func_args,
-        "Benchmark comparison experiments"
-    ):
-        success_count += 1
-    total_steps += 1
+        ]
+        
+        if args.num_nodes is not None:
+            script_args.extend(["--num_nodes", str(args.num_nodes)])
+        
+        if args.sweep_nodes:
+            script_args.append("--sweep_nodes")
+        
+        if args.quick:
+            script_args.append("--quick")
+        
+        if args.preset is not None:
+            script_args.extend(["--preset", args.preset])
+        
+        if run_python_script(
+            "experiments/run_social_only.py",
+            script_args + func_args,
+            "SOCIAL-only benchmark experiments"
+        ):
+            success_count += 1
+        total_steps += 1
+    
+    elif args.mode == "all":
+        print("\n" + "="*70)
+        print("STEP 1: Benchmark Experiments (SOCIAL vs Baselines)")
+        print("="*70)
+        
+        if test_functions:
+            func_args = ["--functions"] + test_functions
+        else:
+            func_args = []
+        
+        script_args = [
+            "--max_evals", str(max_evals),
+            "--num_runs", str(num_runs),
+            "--outdir", args.outdir
+        ]
+        
+        if run_python_script(
+            "experiments/run_benchmarks.py",
+            script_args + func_args,
+            "Benchmark comparison experiments (all algorithms)"
+        ):
+            success_count += 1
+        total_steps += 1
     
     # Step 2: Statistical tests
     print("\n" + "="*70)
@@ -180,7 +231,7 @@ Examples:
     if run_python_script(
         "experiments/ablation.py",
         [
-            "--max_evals", str(args.max_evals),
+            "--max_evals", str(max_evals),
             "--num_runs", str(num_runs),
             "--outdir", args.outdir
         ] + func_args,
@@ -202,7 +253,7 @@ Examples:
     if run_python_script(
         "experiments/centrality_comparison.py",
         [
-            "--max_evals", str(args.max_evals),
+            "--max_evals", str(max_evals),
             "--num_runs", str(num_runs),
             "--outdir", args.outdir
         ] + func_args,
@@ -227,7 +278,7 @@ Examples:
     if run_python_script(
         "experiments/kp_heatmaps.py",
         [
-            "--max_evals", str(args.max_evals),
+            "--max_evals", str(max_evals),
             "--num_runs", str(heatmap_runs),
             "--outdir", args.outdir
         ] + func_args,

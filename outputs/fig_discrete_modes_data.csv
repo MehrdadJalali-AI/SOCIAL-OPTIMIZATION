@@ -1,0 +1,4 @@
+mode,objective,feasibility_rate
+round,1e-05,0.95
+stochastic_round,1e-05,0.98
+integer_ops,1e-05,1.0

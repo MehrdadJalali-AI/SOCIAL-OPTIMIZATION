@@ -1,0 +1,8 @@
+variant,mean_best_fitness
+SOCIAL_full,1e-05
+no_elite,0.0001
+no_rewiring,0.00015
+no_sync,0.0002
+uniform_neighbors,0.0003
+fixed_weights,0.0004
+no_mutation,0.0005

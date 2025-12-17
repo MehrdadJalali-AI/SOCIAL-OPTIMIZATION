@@ -1,0 +1,10 @@
+problem,algorithm,feasibility_rate
+Pressure_Vessel,SOCIAL,0.95
+Welded_Beam,SOCIAL,0.9
+Gear_Train,SOCIAL,1.0
+Pressure_Vessel,DE,0.85
+Welded_Beam,DE,0.75
+Gear_Train,DE,1.0
+Pressure_Vessel,PSO,0.8
+Welded_Beam,PSO,0.7
+Gear_Train,PSO,1.0

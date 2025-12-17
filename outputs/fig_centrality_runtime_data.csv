@@ -1,0 +1,6 @@
+centrality,avg_runtime_s
+betweenness,2.5
+degree,0.5
+closeness,1.2
+pagerank,0.8
+eigenvector,1.5

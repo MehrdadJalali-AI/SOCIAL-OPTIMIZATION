@@ -62,6 +62,24 @@ def run_social_benchmark(function_names=None, max_evals=105000, num_runs=30,
         func, bounds, optimum = functions.functions[func_name]
         dim = config.DIM
         
+        # FUNCTION-AWARE POPULATION SIZING: Set NUM_NODES based on function category
+        # NUM_NODES is selected BEFORE optimization and remains FIXED throughout the run
+        function_category = config.get_function_category(func_name)
+        num_nodes_for_function = config.get_num_nodes_for_function(func_name)
+        
+        # Create a function-specific config with the appropriate NUM_NODES
+        func_config = Config()
+        func_config.__dict__.update(config.__dict__)  # Copy all settings
+        func_config.NUM_NODES = num_nodes_for_function  # Override NUM_NODES for this function
+        
+        # Update derived parameters that depend on NUM_NODES
+        func_config.SEED_SET_SIZE = int(0.1 * func_config.NUM_NODES)
+        if func_config.MAX_EVALS == config.MAX_EVALS:  # Only update if using default
+            func_config.MAX_EVALS = func_config.NUM_NODES * 3500
+        
+        print(f"  Category: {function_category}")
+        print(f"  NUM_NODES: {num_nodes_for_function} (fixed for entire run)")
+        
         # Create output directory for this function
         func_dir = os.path.join(outdir, func_name)
         os.makedirs(func_dir, exist_ok=True)
@@ -76,8 +94,8 @@ def run_social_benchmark(function_names=None, max_evals=105000, num_runs=30,
             # Create budgeted objective
             obj_func = BudgetedObjective(func, max_evals, name=f"{func_name}_{run_idx}")
             
-            # Create optimizer
-            optimizer = SOCIALOptimizer(config, rng=rng)
+            # Create optimizer with function-specific config
+            optimizer = SOCIALOptimizer(func_config, rng=rng)
             
             # Run optimization
             result = optimizer.optimize(obj_func, bounds, dim, seed=seed)
@@ -92,7 +110,7 @@ def run_social_benchmark(function_names=None, max_evals=105000, num_runs=30,
                 search_history = []
                 for node in result['final_population'].nodes:
                     pos = result['final_population'].nodes[node]['position']
-                    search_history.append(pos[config.TRACKED_DIM])
+                    search_history.append(pos[func_config.TRACKED_DIM])
                 
                 search_df = pd.DataFrame({
                     f'Agent_{i}': [search_history[i]] for i in range(len(search_history))
@@ -100,7 +118,7 @@ def run_social_benchmark(function_names=None, max_evals=105000, num_runs=30,
                 search_df.to_csv(os.path.join(func_dir, 'search_history.csv'), index=False)
                 
                 # First agent trajectory
-                first_agent_traj = [result['final_population'].nodes[0]['position'][config.TRACKED_DIM]]
+                first_agent_traj = [result['final_population'].nodes[0]['position'][func_config.TRACKED_DIM]]
                 trajectory_df = pd.DataFrame({
                     'Iteration': range(len(result['convergence_history'])),
                     'Position': first_agent_traj * len(result['convergence_history'])
@@ -144,7 +162,7 @@ def run_social_benchmark(function_names=None, max_evals=105000, num_runs=30,
         
         convergence_speed = next((i for i, fit in enumerate(all_histories[0]) 
                                   if fit < mean_fit + std_fit), len(all_histories[0]))
-        success_rate = np.mean([1 if abs(bf - optimum) < config.SUCCESS_THRESHOLD else 0 
+        success_rate = np.mean([1 if abs(bf - optimum) < func_config.SUCCESS_THRESHOLD else 0 
                                for bf in best_fits])
         
         result_dict = {
